@@ -16,7 +16,8 @@ class LinkedList:
         new_node = Node(task)
         new_node.next = self.head
         self.head = new_node
-
+        
+        
     def remove_task(self, task):
         current = self.head
         previous = None
@@ -38,31 +39,32 @@ class LinkedList:
         while current is not None:
             tasks.append(current.data)
             current = current.next
-
+            
+        tasks.reverse()
         return tasks
 
 # Create a Streamlit app
 def main():
     st.title("To-Do List App with Linked List")
-
-    # Initialize a linked list
-    tasks_list = LinkedList()
+    #Session state, store variables across reruns, create events on input widgets and use callback functions
+    if 'tasks_list' not in st.session_state: 
+        st.session_state.tasks_list = LinkedList()
 
     # Sidebar for adding tasks
     task_input = st.sidebar.text_input("Add Task:")
     if st.sidebar.button("Add"):
         if task_input:
-            tasks_list.add_task(task_input)
+            st.session_state.tasks_list.add_task(task_input) #Added st.session_state
 
     # Sidebar for removing tasks
     task_to_remove = st.sidebar.text_input("Remove Task:")
     if st.sidebar.button("Remove"):
         if task_to_remove:
-            tasks_list.remove_task(task_to_remove)
+            st.session_state.tasks_list.remove_task(task_to_remove) #Added st.session_state
 
     # Main content to display tasks
     st.write("## Your To-Do List:")
-    tasks = tasks_list.display_tasks()
+    tasks = st.session_state.tasks_list.display_tasks() #Added st.session_state
 
     if not tasks:
         st.write("No tasks yet. Add some tasks using the sidebar!")
